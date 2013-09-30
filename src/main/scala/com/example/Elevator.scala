@@ -1,42 +1,20 @@
 package com.example
 
-class Elevator {
-  var callAt: Int = -1
+case class Elevator(callAt: Int = -1, currentFloor: Int = 0, isOpen: Boolean = false) {
 
-  var currentFloor = 0
-
-  var isOpen = false
-
-  def this(current: Int) {
-    this()
-    currentFloor = current
+  def call(floor: Int) = {
+    Elevator(floor, currentFloor, isOpen)
   }
 
-  def this(current: Int, open: Boolean) {
-    this(current)
-    isOpen = open
+  def userHasEntered() = {
+    Elevator(-1, currentFloor, isOpen)
   }
 
-  def call(floor: Int) {
-    callAt = floor
+  def nextCommand() : String = this match {
+    case Elevator(callAt, currentFloor, _) if callAt != -1 && callAt > currentFloor => "UP"
+    case Elevator(callAt, currentFloor, _) if callAt != -1 && callAt == currentFloor => "OPEN"
+    case Elevator(callAt, currentFloor, _) if callAt != -1 => "DOWN"
+    case Elevator(_, _, true) => "CLOSE"
+    case _ => "NOTHING"
   }
-
-  def userHasEntered() {
-    callAt = -1
-  }
-
-  def nextCommand(): String =
-    if (callAt != -1) {
-      if (callAt > currentFloor) {
-        "UP"
-      } else if (callAt == currentFloor) {
-        "OPEN"
-      } else {
-        "DOWN"
-      }
-    } else if (isOpen) {
-      "CLOSE"
-    } else {
-      "NOTHING"
-    }
 }
